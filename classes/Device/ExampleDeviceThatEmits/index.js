@@ -15,19 +15,12 @@ var ExampleDeviceThatEmits = Device.create(function() {
     var self = this;
 
     // some 'private' variable:
-    var timer = null;  // internal timer for this example
+    var autoTimer = null;  // internal timer for this example
 
     this.setup = function() {
         console.log("setting up example device");
         return new dev$Promise().when(function(token) { // setup() returns a promise
             // any setup that occurs each time the device comes online
-            counter = 0;
-            if(timer) {     // as an example, make an internal timer which emits 
-                timer = setInterval(function(){  // every 2 seconds
-                    self.special(1);
-                    //self.events().emit('special',counter++); // emit the internal event
-                },2000);
-            }
             token.resolve();
         });
     };
@@ -35,11 +28,25 @@ var ExampleDeviceThatEmits = Device.create(function() {
     this.warmBoot = function() {
     };
 
-    this.stateValue = function(value) {
+    this.autoIncrementSpecial = function(everyms) {
+        if(!everyms) everyms = 2000; // every 2 seconds is default
+
+        if(autoTimer) clearInterval(autoTimer);
+        autoTimer = setInterval(function(){  
+                self.incrementSpecial(1);
+            },everyms);
+    };
+
+    this.stopAuto = function() {
+        if(autoTimer) clearInterval(autoTimer);
+    }
+
+
+    this.special = function(value) {
         //response to alteration of state value in devicejs to propagate that value to the device
-        console.log("exampledevice setting value: ",value);
+        console.log("ExampleDeviceThatEmits special("+value+")");
         return new dev$Promise().when(function (p) {
-            p.resolve();
+            p.resolve(value);
         });
     };
 
@@ -47,8 +54,7 @@ var ExampleDeviceThatEmits = Device.create(function() {
     services: [],
     facades: [ 'ExampleHappened' ],
     defaults: { 
-        stateValue: 0,
-        specialValue: 100
+        special: 100
     },
     specialStaticThing: 1  // example static variable for class
 }).addDiscovererType('ExampleDiscoverer', {  // <-- needs to match the Discoverer which can create 'ExampleDeviceThatEmits' - note this Discoverer needs to exist in DeviceJS

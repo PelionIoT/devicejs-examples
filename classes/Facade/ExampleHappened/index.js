@@ -2,14 +2,22 @@
 // (c) WigWag Inc 2014
 var Facade = require('Class/Facade');
 
+var util=require('util');
+
 var Special = Facade.create('ExampleHappened', {
     //increment current state value and print
-    special : function(increment) {
-    	console.log("stateValue = " + this.stateValue());
-        return this.stateValue(this.stateValue()+increment);
+    incrementSpecial : function(increment) {
+    	console.dir("special(): " + util.inspect(this.special()));
+    	console.log("specialValue = " + this.special());
+    	console.log("args: ");
+    	console.dir(arguments);
+    	if(typeof increment == 'number')
+    		return this.special(this.special()+increment);
+    	else
+    		return this.special();
     }
 }, {
-    specialValue : function(value) {
+    special : function(value) {
         return typeof value === "number";
     }
 });
