@@ -1,0 +1,34 @@
+{
+	"appServer" : true, // defaults to true
+	"loadApps" : [ 
+    ],	
+	"requiredServices" : [
+	     { "classpath" : "IPStack", "config" : { "wan" : "dhcp" }},
+	     { "classpath" : "HotPlug", "config" : { "verbose": true }}
+	],
+	"relay_info" : {
+		"providers" : {
+        }
+    },
+    "runtimeConfig": {
+        "appDirectories": [ "${dirname}/../classes/App" ],
+        "facadeDirectories": [ "${core}", "${dirname}/../classes" ],
+        "deviceDirectories": [ "${core}", "${dirname}/../classes" ],
+        "discovererDirectories": [ "${core}", "${dirname}/../classes" ],
+        "apps": {
+        },
+        "rootDiscoverers": {
+            "exampleDiscoverer" : {
+                "typeName": "ExampleDiscoverer",
+                "config" : {
+                    "exampleVar" : 123
+                }
+            }
+            // "wwDiscoverer": {
+            //     "typeName": "WigWagDiscoverer",
+            //     "config": {
+            //         "interfacePort": 3000
+            //     }
+        }
+    }
+}
